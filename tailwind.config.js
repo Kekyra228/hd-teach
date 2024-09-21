@@ -9,6 +9,7 @@ module.exports = {
         customBackground: "#F0F3F8",
         textColor: "#204973",
         centerBlock: "#7C96B1",
+        table: "#DAE6F2",
       },
     },
   },

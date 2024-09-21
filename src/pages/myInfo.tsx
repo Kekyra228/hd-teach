@@ -1,12 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { MY_PROFILE_QUERY } from "../graphql/mutation";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 const MyInfo = () => {
   const { data, loading, error } = useQuery(MY_PROFILE_QUERY);
-  const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -14,6 +13,15 @@ const MyInfo = () => {
       router.push("/login"); // Перенаправляем на логин, если нет токена
     }
   }, []);
+  const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.clear();
+
+    // Перенаправляем на страницу логина
+    router.push("/login");
+  };
 
   if (loading) return <p>Загрузка...</p>;
   if (error) return <p>Ошибка: {error.message}</p>;
@@ -21,7 +29,7 @@ const MyInfo = () => {
   return (
     <div>
       <header className="bg-white shadow-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex gap-[76px] items-center">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-10">
             <Image
               src="/HarmonyHR.png"
@@ -55,7 +63,7 @@ const MyInfo = () => {
             <div className="relative flex items-center ">
               <div className="absolute inset-y-0 left-0 top-1 pl-3 flex items-center pointer-events-none mr-6">
                 <svg
-                  className="h-5 w-5 text-gray-400"
+                  className="h-5 w-5 hidden md:block text-gray-400"
                   width="24.006798"
                   height="23.993164"
                   viewBox="0 0 24.0068 23.9932"
@@ -116,7 +124,6 @@ const MyInfo = () => {
                   </g>
                 </svg>
               </div>
-
               <input
                 type="text"
                 placeholder="Search"
@@ -124,7 +131,7 @@ const MyInfo = () => {
               />
             </div>
 
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 items-center">
               <svg
                 width="24.000000"
                 height="24.000000"
@@ -184,7 +191,18 @@ const MyInfo = () => {
                 height={38}
                 alt="avatar"
                 className="rounded-full h-10 w-10"
+                onClick={() => setShowModal(true)} // Открытие модалки при клике
               />
+              {showModal && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                  <button
+                    className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={handleLogout}
+                  >
+                    Log out
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -204,7 +222,7 @@ const MyInfo = () => {
               {data.myProfile.name}
             </h2>
 
-            <div className="flex justify-center flex-wrap md:justify-end md:gap-[63px]  space-x-4 mt-2 text-black">
+            <div className="flex justify-center gap-[20px] flex-wrap md:justify-end md:gap-[63px]  space-x-4 mt-2 text-black">
               <a href="#" className="hover:text-black">
                 Personal
               </a>
@@ -701,38 +719,39 @@ const MyInfo = () => {
             </div>
 
             {/* История */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <div className="font-semibold flex items-center justify-center">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <desc>Created with Pixso.</desc>
-                    <defs />
-                    <rect
-                      id="Icon"
-                      rx="-0.500000"
-                      width="15.000000"
-                      height="15.000000"
-                      transform="translate(0.500061 0.500000)"
-                      fill="#FFFFFF"
-                      fill-opacity="0"
-                    />
-                    <path
-                      id="Union"
-                      d="M5.15198 14.5297L1.55035 14.5297Q1.35947 14.5297 1.1778 14.4887L1.17773 14.4887L1.17755 14.4887L1.17752 14.4887Q1.08203 14.4672 0.989044 14.4343Q0.793121 14.3651 0.62674 14.2523L0.626465 14.2521Q0.562927 14.2091 0.503723 14.1596Q0.34201 14.0246 0.229431 13.8566Q0.182343 13.7864 0.143829 13.7104Q0.065155 13.555 0.0295105 13.3904L0.0295105 13.3903L0.0295105 13.3903L0.0295105 13.3903Q0 13.254 0 13.1113L0 2.41837Q0 2.2757 0.02948 2.13941L0.0295105 2.13937L0.0295105 2.13937L0.0295105 2.13934Q0.065155 1.97467 0.143829 1.81933Q0.182343 1.74332 0.229431 1.67307L0.229431 1.67307Q0.34201 1.50513 0.503723 1.37011Q0.562927 1.32067 0.626434 1.27758L0.626434 1.27758L0.626465 1.27758Q0.792938 1.16465 0.989044 1.09539Q1.08209 1.06254 1.17764 1.041L1.17767 1.041L1.1778 1.04097Q1.35947 1.00006 1.55035 1.00006L14.3561 1.00006Q14.547 1.00006 14.7286 1.04097Q14.8243 1.06251 14.9174 1.09539Q15.1135 1.16465 15.2799 1.27755L15.28 1.27758Q15.3435 1.32067 15.4027 1.37011Q15.5643 1.50504 15.6769 1.67286L15.6771 1.67314Q15.7241 1.74336 15.7626 1.81933Q15.8413 1.97468 15.8769 2.13935Q15.9064 2.27567 15.9064 2.41837L15.9064 7.76485C15.9064 8.18486 15.5764 8.51485 15.1564 8.51485C14.7365 8.51485 14.4064 8.18486 14.4064 7.76485L14.4064 2.50524Q14.3853 2.50006 14.3561 2.50006L1.55035 2.50006Q1.52109 2.50006 1.5 2.50524L1.5 13.0245Q1.52109 13.0297 1.55035 13.0297L5.15198 13.0297C5.57196 13.0297 5.90198 13.3596 5.90198 13.7797C5.90198 14.1997 5.57196 14.5297 5.15198 14.5297ZM8.70337 4.42389L8.70337 7.76544Q8.70337 7.92077 8.64847 8.05336Q8.59354 8.18594 8.4837 8.29577Q8.37387 8.40561 8.2413 8.46053Q8.1087 8.51544 7.95337 8.51544L4.75195 8.51544C4.33194 8.51544 4.00195 8.18544 4.00195 7.76544C4.00195 7.34544 4.33194 7.01544 4.75195 7.01544L7.20337 7.01544L7.20337 4.42389C7.20337 4.00389 7.53339 3.67389 7.95337 3.67389C8.37338 3.67389 8.70337 4.00389 8.70337 4.42389ZM15.2134 12.32Q15.8548 11.4103 15.9966 10.1484C16.0436 9.73065 15.7524 9.3698 15.3348 9.3283C14.9172 9.28679 14.5523 9.58241 14.5053 10.0002Q14.401 10.9285 13.938 11.5387Q13.501 12.1146 12.6977 12.4685Q11.887 12.8258 10.6785 12.9717Q10.0093 13.0526 9.19745 13.0702L9.31796 12.9329C9.59668 12.6152 9.56863 12.1499 9.25421 11.8755C8.93976 11.6011 8.47369 11.6352 8.19498 11.9529L6.73105 13.6216Q6.52179 13.8601 6.54407 14.1741Q6.56564 14.479 6.7948 14.6789Q6.82611 14.7063 6.86029 14.7299Q6.89783 14.7558 6.93832 14.777L9.11108 15.9112C9.48151 16.1046 9.92841 15.9638 10.1268 15.5912C10.3251 15.2185 10.1899 14.7738 9.81952 14.5805L9.76059 14.5497Q10.3339 14.5213 10.8396 14.4602Q12.2713 14.2873 13.2884 13.8391Q14.4352 13.3337 15.1083 12.4624Q15.1118 12.4579 15.1153 12.4533Q15.1225 12.444 15.1295 12.4347Q15.1723 12.3783 15.213 12.3206L15.2134 12.32Z"
-                      clip-rule="evenodd"
-                      fill="#1C3144"
-                      fill-opacity="1.000000"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                  <p>History</p>
-                </div>
+            <div className=" mb-6">
+              <div className="font-semibold flex items-center justify-start mb-4">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <desc>Created with Pixso.</desc>
+                  <defs />
+                  <rect
+                    id="Icon"
+                    rx="-0.500000"
+                    width="15.000000"
+                    height="15.000000"
+                    transform="translate(0.500061 0.500000)"
+                    fill="#FFFFFF"
+                    fill-opacity="0"
+                  />
+                  <path
+                    id="Union"
+                    d="M5.15198 14.5297L1.55035 14.5297Q1.35947 14.5297 1.1778 14.4887L1.17773 14.4887L1.17755 14.4887L1.17752 14.4887Q1.08203 14.4672 0.989044 14.4343Q0.793121 14.3651 0.62674 14.2523L0.626465 14.2521Q0.562927 14.2091 0.503723 14.1596Q0.34201 14.0246 0.229431 13.8566Q0.182343 13.7864 0.143829 13.7104Q0.065155 13.555 0.0295105 13.3904L0.0295105 13.3903L0.0295105 13.3903L0.0295105 13.3903Q0 13.254 0 13.1113L0 2.41837Q0 2.2757 0.02948 2.13941L0.0295105 2.13937L0.0295105 2.13937L0.0295105 2.13934Q0.065155 1.97467 0.143829 1.81933Q0.182343 1.74332 0.229431 1.67307L0.229431 1.67307Q0.34201 1.50513 0.503723 1.37011Q0.562927 1.32067 0.626434 1.27758L0.626434 1.27758L0.626465 1.27758Q0.792938 1.16465 0.989044 1.09539Q1.08209 1.06254 1.17764 1.041L1.17767 1.041L1.1778 1.04097Q1.35947 1.00006 1.55035 1.00006L14.3561 1.00006Q14.547 1.00006 14.7286 1.04097Q14.8243 1.06251 14.9174 1.09539Q15.1135 1.16465 15.2799 1.27755L15.28 1.27758Q15.3435 1.32067 15.4027 1.37011Q15.5643 1.50504 15.6769 1.67286L15.6771 1.67314Q15.7241 1.74336 15.7626 1.81933Q15.8413 1.97468 15.8769 2.13935Q15.9064 2.27567 15.9064 2.41837L15.9064 7.76485C15.9064 8.18486 15.5764 8.51485 15.1564 8.51485C14.7365 8.51485 14.4064 8.18486 14.4064 7.76485L14.4064 2.50524Q14.3853 2.50006 14.3561 2.50006L1.55035 2.50006Q1.52109 2.50006 1.5 2.50524L1.5 13.0245Q1.52109 13.0297 1.55035 13.0297L5.15198 13.0297C5.57196 13.0297 5.90198 13.3596 5.90198 13.7797C5.90198 14.1997 5.57196 14.5297 5.15198 14.5297ZM8.70337 4.42389L8.70337 7.76544Q8.70337 7.92077 8.64847 8.05336Q8.59354 8.18594 8.4837 8.29577Q8.37387 8.40561 8.2413 8.46053Q8.1087 8.51544 7.95337 8.51544L4.75195 8.51544C4.33194 8.51544 4.00195 8.18544 4.00195 7.76544C4.00195 7.34544 4.33194 7.01544 4.75195 7.01544L7.20337 7.01544L7.20337 4.42389C7.20337 4.00389 7.53339 3.67389 7.95337 3.67389C8.37338 3.67389 8.70337 4.00389 8.70337 4.42389ZM15.2134 12.32Q15.8548 11.4103 15.9966 10.1484C16.0436 9.73065 15.7524 9.3698 15.3348 9.3283C14.9172 9.28679 14.5523 9.58241 14.5053 10.0002Q14.401 10.9285 13.938 11.5387Q13.501 12.1146 12.6977 12.4685Q11.887 12.8258 10.6785 12.9717Q10.0093 13.0526 9.19745 13.0702L9.31796 12.9329C9.59668 12.6152 9.56863 12.1499 9.25421 11.8755C8.93976 11.6011 8.47369 11.6352 8.19498 11.9529L6.73105 13.6216Q6.52179 13.8601 6.54407 14.1741Q6.56564 14.479 6.7948 14.6789Q6.82611 14.7063 6.86029 14.7299Q6.89783 14.7558 6.93832 14.777L9.11108 15.9112C9.48151 16.1046 9.92841 15.9638 10.1268 15.5912C10.3251 15.2185 10.1899 14.7738 9.81952 14.5805L9.76059 14.5497Q10.3339 14.5213 10.8396 14.4602Q12.2713 14.2873 13.2884 13.8391Q14.4352 13.3337 15.1083 12.4624Q15.1118 12.4579 15.1153 12.4533Q15.1225 12.444 15.1295 12.4347Q15.1723 12.3783 15.213 12.3206L15.2134 12.32Z"
+                    clip-rule="evenodd"
+                    fill="#1C3144"
+                    fill-opacity="1.000000"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <p>History</p>
+              </div>
+              <div className="flex items-center mb-4">
+                {/* Левый блок с двумя селектами */}
                 <div className="flex space-x-4">
                   <select className="border border-gray-300 rounded-lg p-2 text-sm">
                     <option>Sick</option>
@@ -741,16 +760,23 @@ const MyInfo = () => {
                   </select>
                   <select className="border border-gray-300 rounded-lg p-2 text-sm">
                     <option>All</option>
+                    <option>Last Week</option>
+                    <option>Last Month</option>
                   </select>
+                </div>
+
+                {/* Добавляем отступ для правого селекта */}
+                <div className="ml-auto">
                   <select className="border border-gray-300 rounded-lg p-2 text-sm">
                     <option>Balance History</option>
+                    <option>Usage History</option>
                   </select>
                 </div>
               </div>
 
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-gray-100">
+                  <tr className="bg-table">
                     <th className="p-3 text-sm font-semibold border">Date</th>
                     <th className="p-3 text-sm font-semibold border">
                       Description
