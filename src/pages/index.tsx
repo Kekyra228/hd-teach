@@ -13,7 +13,7 @@ export default function HomePage() {
   }, [router]);
 
   return (
-    <div className="h-screen flex justify-center items-center bg-blue-500">
+    <div className="h-screen flex justify-center items-center bg-customBackground">
       <h1 className="text-white text-4xl">Главная страница!</h1>
     </div>
   );

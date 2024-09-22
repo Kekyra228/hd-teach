@@ -17,7 +17,7 @@ const MyInfo = () => {
   const router = useRouter();
 
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem("access_token");
 
     // Перенаправляем на страницу логина
     router.push("/login");
@@ -190,16 +190,17 @@ const MyInfo = () => {
                 width={38}
                 height={38}
                 alt="avatar"
-                className="rounded-full h-10 w-10"
+                className="rounded-full  relative h-10 w-10"
                 onClick={() => setShowModal(true)} // Открытие модалки при клике
               />
               {showModal && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                <div className="absolute right-5 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                  <p className="text-center">Log out?</p>
                   <button
                     className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     onClick={handleLogout}
                   >
-                    Log out
+                    Yes
                   </button>
                 </div>
               )}
