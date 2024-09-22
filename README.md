@@ -27,9 +27,7 @@
    cd harmony-hr
 
 2. Установите зависимости:
-
- ```bash
-npm install
+   npm install
    
 ### Запуск продакшн-сборки:
 1. npm run build
