@@ -22,6 +22,9 @@ const MyInfo = () => {
     // Перенаправляем на страницу логина
     router.push("/login");
   };
+  const handleCancel = () => {
+    setShowModal(false);
+  };
 
   if (loading) return <p>Загрузка...</p>;
   if (error) return <p>Ошибка: {error.message}</p>;
@@ -194,13 +197,19 @@ const MyInfo = () => {
                 onClick={() => setShowModal(true)} // Открытие модалки при клике
               />
               {showModal && (
-                <div className="absolute right-5 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                <div className="absolute right-5 top-4 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                   <p className="text-center">Log out?</p>
                   <button
                     className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     onClick={handleLogout}
                   >
                     Yes
+                  </button>
+                  <button
+                    className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={handleCancel}
+                  >
+                    No
                   </button>
                 </div>
               )}
@@ -215,7 +224,7 @@ const MyInfo = () => {
             width={150}
             height={150}
             alt="avatar"
-            className="w-16 h-16 md:w-[150px] md: ml-[60px] md:h-[150px] rounded-full object-cover"
+            className="w-16 h-16 md:w-[150px] mt-2 md:h-[150px] rounded-full object-cover"
           />
 
           <div className="mt-4 md:mt-0 text-center md:text-left">
@@ -321,9 +330,9 @@ const MyInfo = () => {
           </button>
         </div>
       </div>
-      <div className="flex px-6">
-        <div className="w-[250px] flex-shrink-0">
-          <aside className=" p-6  mt-4 md:w-[225px] flex flex-col items-center space-y-6 box-border ">
+      <div className="flex flex-col lg:flex-row px-4 lg:px-6">
+        <div className="w-full lg:w-[250px] flex-shrink-0 lg:mr-6">
+          <aside className=" p-6 mt-4 md:w-[225px] flex flex-col items-center space-y-6 box-border ">
             {/* Контактная информация */}
             <div className="md:w-[225px] box-border text-center space-y-2">
               <div className="flex bg-white rounded-lg shadow-inner p-6 flex-col items-start justify-start space-y-4">
@@ -751,8 +760,7 @@ const MyInfo = () => {
                 </svg>
                 <p>History</p>
               </div>
-              <div className="flex items-center mb-4">
-                {/* Левый блок с двумя селектами */}
+              <div className="flex flex-wrap items-center mb-4 gap-4">
                 <div className="flex space-x-4">
                   <select className="border border-gray-300 rounded-lg p-2 text-sm">
                     <option>Sick</option>
@@ -766,8 +774,7 @@ const MyInfo = () => {
                   </select>
                 </div>
 
-                {/* Добавляем отступ для правого селекта */}
-                <div className="ml-auto">
+                <div className="ml-auto w-full sm:w-auto">
                   <select className="border border-gray-300 rounded-lg p-2 text-sm">
                     <option>Balance History</option>
                     <option>Usage History</option>
@@ -775,54 +782,56 @@ const MyInfo = () => {
                 </div>
               </div>
 
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-table">
-                    <th className="p-3 text-sm font-semibold border">Date</th>
-                    <th className="p-3 text-sm font-semibold border">
-                      Description
-                    </th>
-                    <th className="p-3 text-sm font-semibold border">
-                      Used Days (-)
-                    </th>
-                    <th className="p-3 text-sm font-semibold border">
-                      Earned Days (+)
-                    </th>
-                    <th className="p-3 text-sm font-semibold border">
-                      Balance
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="p-3 border">23/05/2024</td>
-                    <td className="p-3 border">
-                      Accrual for 23/05/2024 to 20/11/2024
-                    </td>
-                    <td className="p-3 border">3.00</td>
-                    <td className="p-3 border">3.00</td>
-                    <td className="p-3 border">3.00</td>
-                  </tr>
-                  <tr>
-                    <td className="p-3 border">23/05/2024</td>
-                    <td className="p-3 border">
-                      Accrual for 23/05/2024 to 20/11/2024
-                    </td>
-                    <td className="p-3 border">-6</td>
-                    <td className="p-3 border">3.00</td>
-                    <td className="p-3 border">3.00</td>
-                  </tr>
-                  <tr>
-                    <td className="p-3 border">23/05/2024</td>
-                    <td className="p-3 border">
-                      Accrual for 23/05/2024 to 20/11/2024
-                    </td>
-                    <td className="p-3 border">-6</td>
-                    <td className="p-3 border">3.00</td>
-                    <td className="p-3 border">3.00</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-table">
+                      <th className="p-3 text-sm font-semibold border">Date</th>
+                      <th className="p-3 text-sm font-semibold border">
+                        Description
+                      </th>
+                      <th className="p-3 text-sm font-semibold border">
+                        Used Days (-)
+                      </th>
+                      <th className="p-3 text-sm font-semibold border">
+                        Earned Days (+)
+                      </th>
+                      <th className="p-3 text-sm font-semibold border">
+                        Balance
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="p-3 border">23/05/2024</td>
+                      <td className="p-3 border">
+                        Accrual for 23/05/2024 to 20/11/2024
+                      </td>
+                      <td className="p-3 border">3.00</td>
+                      <td className="p-3 border">3.00</td>
+                      <td className="p-3 border">3.00</td>
+                    </tr>
+                    <tr>
+                      <td className="p-3 border">23/05/2024</td>
+                      <td className="p-3 border">
+                        Accrual for 23/05/2024 to 20/11/2024
+                      </td>
+                      <td className="p-3 border">-6</td>
+                      <td className="p-3 border">3.00</td>
+                      <td className="p-3 border">3.00</td>
+                    </tr>
+                    <tr>
+                      <td className="p-3 border">23/05/2024</td>
+                      <td className="p-3 border">
+                        Accrual for 23/05/2024 to 20/11/2024
+                      </td>
+                      <td className="p-3 border">-6</td>
+                      <td className="p-3 border">3.00</td>
+                      <td className="p-3 border">3.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
